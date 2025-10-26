@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="icon" href="logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil Futurista - Octoweb 5.0</title>
+  <title>Perfil Futurista - Decisão 5.0</title>
   <style>
     * {
       margin: 0;
@@ -229,13 +229,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
     .game-btn {
       padding: 15px;
       font-size: 1.1em;
@@ -250,20 +243,6 @@
     .game-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
-
-    .btn-easy {
-      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-      color: #2d3748 !important;
-    }
-
-    .btn-medium {
-      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-      color: #2d3748 !important;
-    }
-
-    .btn-hard {
-      background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
     }
 
     .mode-card {
@@ -322,9 +301,25 @@
       gap: 5px;
     }
 
-    .heart {
-      color: #e74c3c;
-      font-size: 1.5em;
+    .pause-btn {
+      background: linear-gradient(45deg, #f39c12, #e67e22);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      font-size: 0.9em;
+    }
+
+    .pause-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
+    }
+
+    .pause-btn.paused {
+      background: linear-gradient(45deg, #2ecc71, #27ae60);
     }
 
     .game-area {
@@ -501,9 +496,10 @@
       text-align: center;
       border: 3px solid transparent;
       transition: all 0.3s;
+      position: relative;
     }
 
-    .shop-item:hover:not(.owned) {
+    .shop-item:hover {
       transform: translateY(-5px);
       border-color: #3498db;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -534,10 +530,23 @@
       font-size: 0.9em;
     }
 
-    .shop-item.owned {
+    .shop-item.theme-owned {
       opacity: 0.6;
       background: linear-gradient(135deg, #d4edda, #c3e6cb);
       border-color: #2ecc71;
+      cursor: default;
+    }
+
+    .shop-item .stock-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #2ecc71;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: bold;
     }
 
     .leaderboard-list {
@@ -591,7 +600,6 @@
       100% { transform: translateY(0); opacity: 0.5; }
     }
 
-    /* Estilos para Tela de Descanso */
     .screensaver {
       position: fixed;
       top: 0;
@@ -693,7 +701,7 @@
         <div class="avatar-img">🤖</div>
         <div class="overlay"></div>
       </div>
-      <h1>Octoweb 5.0</h1>
+      <h1>Decisão 5.0</h1>
       <p class="subtitle">Desenvolvedor Full-stack | Criador de Soluções</p>
     </div>
 
@@ -713,10 +721,8 @@
       </ul>
     </div>
 
-    <!-- Modal do Jogo -->
     <div class="modal" id="modalJogo">
       <div class="modal-content">
-        <!-- Menu Inicial -->
         <div id="menuScreen" class="game-screen active">
           <h3>♻️ TROQUE ECONOMIZE</h3>
           <p style="color: #ddd; margin-bottom: 20px;">Aprenda a reciclar e salve o planeta!</p>
@@ -733,50 +739,34 @@
           </div>
         </div>
 
-        <!-- Seleção de Personagem -->
         <div id="characterScreen" class="game-screen">
           <h3 style="color: #2c3e50; margin-bottom: 20px;">Escolha seu Eco-Guerreiro!</h3>
-          
           <div class="character-select" id="characterSelect"></div>
-
           <div class="text-center mt-3">
             <button class="game-btn" style="background: linear-gradient(45deg, #2ecc71, #27ae60);" onclick="showGameScreen('modeScreen')">CONTINUAR ➡️</button>
             <button class="game-btn" style="background: linear-gradient(45deg, #3498db, #2980b9); margin-top: 10px;" onclick="showGameScreen('menuScreen')">⬅️ VOLTAR</button>
           </div>
         </div>
 
-        <!-- Seleção de Modo -->
         <div id="modeScreen" class="game-screen">
           <h3 style="color: #2c3e50; margin-bottom: 30px;">Escolha o Modo</h3>
           
           <div class="mode-card" onclick="startGame('facil')">
             <div class="emoji">🌱</div>
             <h3>FÁCIL</h3>
-            <div class="info">
-              6 rodadas<br>
-              15 segundos cada<br>
-              Velocidade: Lenta
-            </div>
+            <div class="info">6 rodadas • 15s cada • Velocidade Lenta</div>
           </div>
 
           <div class="mode-card" onclick="startGame('medio')">
             <div class="emoji">🌳</div>
             <h3>MÉDIO</h3>
-            <div class="info">
-              10 rodadas<br>
-              10 segundos cada<br>
-              Velocidade: Normal
-            </div>
+            <div class="info">10 rodadas • 10s cada • Velocidade Normal</div>
           </div>
 
           <div class="mode-card" onclick="startGame('dificil')">
             <div class="emoji">🔥</div>
             <h3>DIFÍCIL</h3>
-            <div class="info">
-              10 rodadas<br>
-              8 segundos cada<br>
-              Velocidade: Rápida
-            </div>
+            <div class="info">10 rodadas • 8s cada • Velocidade Rápida</div>
           </div>
 
           <div class="text-center">
@@ -784,24 +774,29 @@
           </div>
         </div>
 
-        <!-- Tela de Jogo -->
         <div id="gameScreen" class="game-screen">
           <div class="hud">
             <div class="hud-item">
-              <span>❤️ Vidas:</span>
+              <span>❤️</span>
               <div class="hearts" id="hearts"></div>
             </div>
             <div class="hud-item">
               <span>⏱️ <span id="timer">15</span>s</span>
             </div>
             <div class="hud-item">
-              <span>🎯 Rodada: <span id="round">1</span>/<span id="totalRounds">6</span></span>
+              <span>🎯 <span id="round">1</span>/<span id="totalRounds">6</span></span>
             </div>
             <div class="hud-item">
-              <span>💰 <span id="coins">0</span></span>
+              <span>💰 <span id="coins">500</span></span>
             </div>
             <div class="hud-item">
-              <span>🔥 Combo: x<span id="combo">1</span></span>
+              <span>🔥 x<span id="combo">1</span></span>
+            </div>
+            <div class="hud-item" id="boostIndicator" style="display: none;">
+              <span id="boostText"></span>
+            </div>
+            <div class="hud-item">
+              <button class="pause-btn" id="pauseBtn" onclick="togglePause()">⏸️</button>
             </div>
           </div>
 
@@ -814,7 +809,6 @@
           </div>
         </div>
 
-        <!-- Loja -->
         <div id="shopScreen" class="game-screen">
           <h3 style="color: #2c3e50; margin-bottom: 20px;">🛒 Loja Eco</h3>
           
@@ -829,7 +823,6 @@
           </div>
         </div>
 
-        <!-- Ranking -->
         <div id="leaderboardScreen" class="game-screen">
           <h3 style="color: #fff; margin-bottom: 20px;">🏆 Ranking Semanal</h3>
           
@@ -847,18 +840,17 @@
           <div class="leaderboard-list" id="leaderboardList"></div>
 
           <div class="text-center mt-3">
-            <button class="game-btn" style="background: linear-gradient(45deg, #e74c3c, #c0392b); font-size: 0.9em;" onclick="clearLeaderboard()">🗑️ LIMPAR RANKING</button>
+            <button class="game-btn" style="background: linear-gradient(45deg, #e74c4c3c, #c0392b); font-size: 0.9em;" onclick="clearLeaderboard()">🗑️ LIMPAR</button>
             <button class="game-btn" style="background: linear-gradient(45deg, #3498db, #2980b9); margin-top: 10px;" onclick="showGameScreen('menuScreen')">⬅️ VOLTAR</button>
           </div>
         </div>
 
-        <!-- Game Over -->
         <div id="gameOverScreen" class="game-screen">
           <h3 id="gameOverTitle" style="color: #2c3e50; margin-bottom: 20px;">Game Over!</h3>
           
           <div style="text-align: center; font-size: 1.5em; margin: 30px 0;">
-            <div style="color: #fff;">🎯 Pontuação Final: <span id="finalScore" style="color: #f39c12; font-weight: bold;">0</span></div>
-            <div style="margin-top: 15px; color: #fff;">💰 Moedas Ganhas: <span id="coinsEarned" style="color: #2ecc71; font-weight: bold;">0</span></div>
+            <div style="color: #fff;">🎯 Pontuação: <span id="finalScore" style="color: #f39c12; font-weight: bold;">0</span></div>
+            <div style="margin-top: 15px; color: #fff;">💰 Moedas: <span id="coinsEarned" style="color: #2ecc71; font-weight: bold;">0</span></div>
             <div style="margin-top: 15px;" id="rankingMessage"></div>
           </div>
 
@@ -872,36 +864,29 @@
       </div>
     </div>
 
-    <!-- Modal de Música -->
     <div class="modal" id="modalPortfolio">
       <div class="modal-content" style="background: #1a1a2e; border-color: #00ffcc;">
         <h3 style="color: #00ffcc;">🎧 Trilha Futurista</h3>
-       <div class="music-container">
-          <p style="color: #aaa; margin: 20px 0;">
-            Curta uma vibe enquanto explora o perfil!
-          </p>
+        <div class="music-container">
+          <p style="color: #aaa; margin: 20px 0;">Curta uma vibe enquanto explora o perfil!</p>
           <div style="background: rgba(0, 255, 255, 0.1); border: 2px solid #00ffff; box-shadow: 0 0 25px #00ffffaa; border-radius: 20px; padding: 20px; margin: 20px 0;">
             <audio id="musicPlayer" controls style="width: 100%; max-width: 500px; margin: 0 auto; display: block; filter: hue-rotate(180deg) brightness(1.2);">
               <source src="Música futurista - Vem para Etec - Lucas Antonini (youtube).mp3" type="audio/mpeg">
               Seu navegador não suporta o elemento de áudio.
             </audio>
-            <p style="color: #00e6ff; font-size: 1rem; margin-top: 15px; text-align: center;">
-              🎵 Música Futurista
-            </p>
+            <p style="color: #00e6ff; font-size: 1rem; margin-top: 15px; text-align: center;">🎵 Música Futurista</p>
           </div>
         </div>
         <button class="close-btn" id="closePortfolio">Fechar</button>
       </div>
     </div>
 
-    <!-- Tela de Descanso -->
     <div class="screensaver" id="screensaver">
       <div class="grid"></div>
       <div class="time" id="screensaverTime"></div>
       <div class="ball" id="screensaverBall"></div>
     </div>
 
-    <!-- Luzes animadas -->
     <div class="energy" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
     <div class="energy" style="top: 30%; left: 80%; animation-delay: 1s;"></div>
     <div class="energy" style="top: 60%; left: 40%; animation-delay: 2s;"></div>
@@ -909,7 +894,6 @@
   </div>
 
   <script>
-    // Estado do Jogo
     const gameState = {
       coins: parseInt(localStorage.getItem('ecoCoins')) || 0,
       lives: 3,
@@ -920,17 +904,24 @@
       score: 0,
       mode: 'facil',
       selectedCharacter: localStorage.getItem('selectedCharacter') || 'mago',
-      ownedItems: JSON.parse(localStorage.getItem('ownedItems')) || [],
+      itemCounts: JSON.parse(localStorage.getItem('itemCounts')) || {},
+      ownedThemes: JSON.parse(localStorage.getItem('ownedThemes')) || [],
       activeBoosts: {
-        extraLife: false,
+        extraLife: 0,
         extraTime: false,
-        slowMotion: false,
-        doubleCoins: false
+        slowMotion: 0,
+        doubleCoins: false,
+        shieldProtection: false,
+        timeFreeze: false,
+        luckyClover: false,
+        magneticBins: false,
+        rainbowPower: false
       },
-      currentLeaderboardMode: 'facil'
+      currentLeaderboardMode: 'facil',
+      shieldActive: false,
+      comboNeverResets: false
     };
 
-    // Personagens
     const characters = [
       { id: 'mago', name: 'Mago do Lixo', emoji: '🧙‍♂️', desc: 'Rápido e preciso' },
       { id: 'futurista', name: 'Futurista Reciclador', emoji: '🤖', desc: 'Tecnologia verde' },
@@ -938,29 +929,31 @@
       { id: 'capitao', name: 'Capitão Lixeira', emoji: '🦸', desc: 'Herói do planeta' }
     ];
 
-    // Itens da Loja
     const shopItems = [
-      { id: 'extraLife', name: 'Vida Extra', icon: '❤️', price: 50, desc: 'Adiciona +1 vida', type: 'boost' },
+      { id: 'extraLife', name: 'Vida Extra', icon: '❤️', price: 100, desc: 'Adiciona +1 vida', type: 'stackable' },
       { id: 'extraTime', name: '+5 Segundos', icon: '⏰', price: 40, desc: 'Ganha 5s extras', type: 'boost' },
-      { id: 'slowMotion', name: 'Câmera Lenta', icon: '🐌', price: 60, desc: 'Itens caem devagar', type: 'boost' },
-      { id: 'doubleCoins', name: 'Moedas x2', icon: '💰', price: 80, desc: 'Dobra suas moedas', type: 'boost' },
+      { id: 'slowMotion', name: 'Câmera Lenta', icon: '🌀', price: 150, desc: 'Mais devagar', type: 'stackable' },
+      { id: 'doubleCoins', name: 'Moedas x2', icon: '💰', price: 200, desc: 'Dobra moedas', type: 'boost' },
+      { id: 'shieldProtection', name: 'Escudo', icon: '🛡️', price: 70, desc: 'Protege de 1 erro', type: 'boost' },
+      { id: 'timeFreeze', name: 'Congelar Tempo', icon: '❄️', price: 120, desc: '+10s no tempo', type: 'boost' },
+      { id: 'luckyClover', name: 'Trevo da Sorte', icon: '🍀', price: 100, desc: 'Combo infinito', type: 'boost' },
+      { id: 'magneticBins', name: 'Lixeiras Magnéticas', icon: '🧲', price: 210, desc: 'Atrai corretos', type: 'boost' },
+      { id: 'rainbowPower', name: 'Poder Arco-Íris', icon: '🌈', price: 150, desc: 'Pontos x3', type: 'boost' },
       { id: 'ocean', name: 'Tema Oceano', icon: '🌊', price: 75, desc: 'Tema azul', type: 'theme' },
       { id: 'forest', name: 'Tema Floresta', icon: '🌲', price: 75, desc: 'Tema verde', type: 'theme' },
       { id: 'sunset', name: 'Pôr do Sol', icon: '🌅', price: 75, desc: 'Tema laranja', type: 'theme' },
       { id: 'night', name: 'Tema Noite', icon: '🌙', price: 75, desc: 'Tema escuro', type: 'theme' }
     ];
 
-    // Tipos de Lixo
     const trashTypes = {
-      plastico: ['🥤', '🧴', '🛍️', '🥛', '💿', '🍼', '🩹'],
-      metal: ['🥫', '🔧', '🔩', '⚙️', '⛓️', '🗝️', '🔎'],
-      organico: ['🍎', '🍌', '🥕', '🍞', '🥚', '🌽', '🍊', '🥔', '🧅'],
-      vidro: ['🍾', '💡', '🔬', '⚗️', '🍺'],
+      plastico: ['🥤', '🧴', '🛍️', '🗑️', '💿', '🍼', '🩹'],
+      metal: ['🥫', '🔧', '🔩', '⚙️', '⛓️', '🗝️', '🔨'],
+      organico: ['🍎', '🌽', '🥕', '🍞', '🥚', '🌽', '🍊', '🥔', '🧅'],
+      vidro: ['🍾', '💡', '🪞', '⚗️', '🍺'],
       papel: ['📄', '📰', '📦', '📚', '🎫', '🗞️', '📋'],
       especial: ['🔋', '📱', '💻', '🖥️', '⌚', '🎮', '🔌']
     };
 
-    // Configurações por Modo
     const modeConfig = {
       facil: { rounds: 6, time: 15, speed: 3 },
       medio: { rounds: 10, time: 10, speed: 5 },
@@ -970,8 +963,8 @@
     let timerInterval;
     let fallingInterval;
     let currentFallingItem = null;
+    let isPaused = false;
 
-    // Sistema de Sons
     const soundEffects = {
       correct: null,
       wrong: null,
@@ -1106,6 +1099,60 @@
       }
     }
 
+    function togglePause() {
+      isPaused = !isPaused;
+      const pauseBtn = document.getElementById('pauseBtn');
+      
+      if (isPaused) {
+        clearInterval(timerInterval);
+        clearInterval(fallingInterval);
+        pauseBtn.textContent = '▶️';
+        pauseBtn.classList.add('paused');
+        
+        if (currentFallingItem) {
+          currentFallingItem.style.animationPlayState = 'paused';
+        }
+        
+        soundEffects.click();
+      } else {
+        pauseBtn.textContent = '⏸️';
+        pauseBtn.classList.remove('paused');
+        
+        if (currentFallingItem) {
+          currentFallingItem.style.animationPlayState = 'running';
+          const currentTop = parseInt(currentFallingItem.style.top);
+          const config = modeConfig[gameState.mode];
+          let speed = config.speed;
+          
+          if (gameState.activeBoosts.slowMotion > 0) {
+            speed = speed / (1 + (gameState.activeBoosts.slowMotion * 0.5));
+          }
+          
+          animateItemFromPosition(currentFallingItem, speed, currentTop);
+        }
+        
+        startTimer();
+        soundEffects.click();
+      }
+    }
+
+    function animateItemFromPosition(item, speed, startTop) {
+      let top = startTop;
+      fallingInterval = setInterval(() => {
+        if (isPaused) {
+          clearInterval(fallingInterval);
+          return;
+        }
+        top += speed;
+        item.style.top = top + 'px';
+
+        if (top > 280) {
+          clearInterval(fallingInterval);
+          if (!isPaused) loseLife();
+        }
+      }, 30);
+    }
+
     function init() {
       updateCoinsDisplay();
       renderCharacters();
@@ -1151,13 +1198,37 @@
       document.getElementById('shopCoins').textContent = gameState.coins;
       
       grid.innerHTML = shopItems.map(item => {
-        const owned = gameState.ownedItems.includes(item.id);
+        const count = gameState.itemCounts[item.id] || 0;
+        const isTheme = item.type === 'theme';
+        const isThemeOwned = isTheme && gameState.ownedThemes.includes(item.id);
+        
+        let displayText = '';
+        let showStock = false;
+        
+        if (isTheme) {
+          if (isThemeOwned) {
+            displayText = '✅ COMPRADO';
+          } else {
+            displayText = `💰 ${item.price}`;
+          }
+        } else {
+          if (count > 0) {
+            displayText = `💰 ${item.price}`;
+            showStock = true;
+          } else {
+            displayText = `💰 ${item.price}`;
+          }
+        }
+        
+        const canBuy = !isThemeOwned;
+        
         return `
-          <div class="shop-item ${owned ? 'owned' : ''}" onclick="${!owned ? `buyItem('${item.id}')` : ''}">
+          <div class="shop-item ${isThemeOwned ? 'theme-owned' : ''}" onclick="${canBuy ? `buyItem('${item.id}')` : ''}">
+            ${showStock ? `<div class="stock-badge">x${count}</div>` : ''}
             <div class="icon">${item.icon}</div>
             <h4>${item.name}</h4>
             <p>${item.desc}</p>
-            <div class="price">${owned ? '✅ COMPRADO' : `💰 ${item.price} moedas`}</div>
+            <div class="price">${displayText}</div>
           </div>
         `;
       }).join('');
@@ -1165,23 +1236,37 @@
 
     function buyItem(itemId) {
       const item = shopItems.find(i => i.id === itemId);
-      if (gameState.coins >= item.price && !gameState.ownedItems.includes(itemId)) {
-        gameState.coins -= item.price;
-        gameState.ownedItems.push(itemId);
-        localStorage.setItem('ecoCoins', gameState.coins);
-        localStorage.setItem('ownedItems', JSON.stringify(gameState.ownedItems));
-        updateCoinsDisplay();
-        renderShop();
-        soundEffects.coin();
-        
-        if (item.type === 'boost') {
-          gameState.activeBoosts[itemId] = true;
-        } else if (item.type === 'theme') {
-          document.body.className = 'theme-' + itemId;
-        }
-      } else {
+      
+      if (!item) return;
+      
+      if (gameState.coins < item.price) {
         soundEffects.wrong();
+        return;
       }
+      
+      if (item.type === 'theme' && gameState.ownedThemes.includes(itemId)) {
+        soundEffects.wrong();
+        return;
+      }
+      
+      gameState.coins -= item.price;
+      
+      if (item.type === 'theme') {
+        gameState.ownedThemes.push(itemId);
+        localStorage.setItem('ownedThemes', JSON.stringify(gameState.ownedThemes));
+        document.body.className = 'theme-' + itemId;
+      } else if (item.type === 'stackable') {
+        gameState.itemCounts[itemId] = (gameState.itemCounts[itemId] || 0) + 1;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+      } else {
+        gameState.itemCounts[itemId] = (gameState.itemCounts[itemId] || 0) + 1;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+      }
+      
+      localStorage.setItem('ecoCoins', gameState.coins);
+      updateCoinsDisplay();
+      renderShop();
+      soundEffects.coin();
     }
 
     function updateCoinsDisplay() {
@@ -1196,20 +1281,74 @@
       gameState.mode = mode;
       const config = modeConfig[mode];
       
+      isPaused = false;
+      gameState.shieldActive = false;
+      gameState.comboNeverResets = false;
+      
       gameState.lives = 3;
-      if (gameState.activeBoosts.extraLife) {
-        gameState.lives += 1;
-        gameState.activeBoosts.extraLife = false;
-        localStorage.setItem('ownedItems', JSON.stringify(gameState.ownedItems.filter(id => id !== 'extraLife')));
+      
+      if (gameState.itemCounts.extraLife > 0) {
+        gameState.lives += gameState.itemCounts.extraLife;
+        gameState.activeBoosts.extraLife = gameState.itemCounts.extraLife;
+        gameState.itemCounts.extraLife = 0;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
       }
       
       gameState.round = 1;
       gameState.totalRounds = config.rounds;
       gameState.timer = config.time;
-      if (gameState.activeBoosts.extraTime) {
-        gameState.timer += 5;
-        gameState.activeBoosts.extraTime = false;
-        localStorage.setItem('ownedItems', JSON.stringify(gameState.ownedItems.filter(id => id !== 'extraTime')));
+      
+      if (gameState.itemCounts.extraTime > 0) {
+        gameState.timer += 5 * gameState.itemCounts.extraTime;
+        gameState.activeBoosts.extraTime = true;
+        gameState.itemCounts.extraTime = 0;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+      }
+      
+      if (gameState.itemCounts.slowMotion > 0) {
+        gameState.activeBoosts.slowMotion = gameState.itemCounts.slowMotion;
+      }
+      
+      if (gameState.itemCounts.doubleCoins > 0) {
+        gameState.activeBoosts.doubleCoins = true;
+        gameState.itemCounts.doubleCoins--;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+      }
+      
+      if (gameState.itemCounts.shieldProtection > 0) {
+        gameState.shieldActive = true;
+        gameState.activeBoosts.shieldProtection = true;
+        gameState.itemCounts.shieldProtection--;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+        updateBoostIndicator('🛡️ Escudo Ativo');
+      }
+      
+      if (gameState.itemCounts.timeFreeze > 0) {
+        gameState.timer += 10;
+        gameState.activeBoosts.timeFreeze = true;
+        gameState.itemCounts.timeFreeze--;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+      }
+      
+      if (gameState.itemCounts.luckyClover > 0) {
+        gameState.comboNeverResets = true;
+        gameState.activeBoosts.luckyClover = true;
+        gameState.itemCounts.luckyClover--;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+        updateBoostIndicator('🍀 Combo Infinito');
+      }
+      
+      if (gameState.itemCounts.magneticBins > 0) {
+        gameState.activeBoosts.magneticBins = true;
+        gameState.itemCounts.magneticBins--;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+      }
+      
+      if (gameState.itemCounts.rainbowPower > 0) {
+        gameState.activeBoosts.rainbowPower = true;
+        gameState.itemCounts.rainbowPower--;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
+        updateBoostIndicator('🌈 Pontos x3');
       }
       
       gameState.combo = 1;
@@ -1220,6 +1359,15 @@
       setupBins();
       updateHUD();
       startRound();
+    }
+
+    function updateBoostIndicator(text) {
+      const indicator = document.getElementById('boostIndicator');
+      const boostText = document.getElementById('boostText');
+      if (indicator && boostText) {
+        boostText.textContent = text;
+        indicator.style.display = 'flex';
+      }
     }
 
     function setupBins() {
@@ -1274,12 +1422,10 @@
       currentFallingItem = item;
 
       const config = modeConfig[gameState.mode];
-      let speed = config.speed + (gameState.round - 1) * 0.5;
+      let speed = config.speed;
       
-      if (gameState.activeBoosts.slowMotion) {
-        speed = speed / 2;
-        gameState.activeBoosts.slowMotion = false;
-        localStorage.setItem('ownedItems', JSON.stringify(gameState.ownedItems.filter(id => id !== 'slowMotion')));
+      if (gameState.activeBoosts.slowMotion > 0) {
+        speed = speed / (1 + (gameState.activeBoosts.slowMotion * 0.5));
       }
 
       animateItem(item, speed);
@@ -1288,6 +1434,7 @@
     function animateItem(item, speed) {
       let top = 0;
       fallingInterval = setInterval(() => {
+        if (isPaused) return;
         top += speed;
         item.style.top = top + 'px';
 
@@ -1299,7 +1446,7 @@
     }
 
     function dropInBin(binType) {
-      if (!currentFallingItem) return;
+      if (!currentFallingItem || isPaused) return;
 
       const itemType = currentFallingItem.dataset.type;
       clearInterval(fallingInterval);
@@ -1312,7 +1459,12 @@
         setTimeout(() => bin.classList.remove('highlight'), 500);
 
         gameState.combo++;
-        const points = 10 * gameState.combo;
+        let points = 10 * gameState.combo;
+        
+        if (gameState.activeBoosts.rainbowPower) {
+          points *= 3;
+        }
+        
         gameState.score += points;
         
         let coinsEarned = Math.ceil(points / 10);
@@ -1350,8 +1502,21 @@
     }
 
     function loseLife() {
-      gameState.lives--;
-      gameState.combo = 1;
+      if (gameState.shieldActive) {
+        gameState.shieldActive = false;
+        soundEffects.coin();
+        updateBoostIndicator('🛡️ Escudo Usado!');
+        setTimeout(() => {
+          const indicator = document.getElementById('boostIndicator');
+          if (indicator) indicator.style.display = 'none';
+        }, 2000);
+      } else {
+        gameState.lives--;
+        
+        if (!gameState.comboNeverResets) {
+          gameState.combo = 1;
+        }
+      }
       
       if (currentFallingItem) {
         currentFallingItem.remove();
@@ -1374,6 +1539,14 @@
       
       const config = modeConfig[gameState.mode];
       gameState.timer = config.time;
+      
+      if (gameState.activeBoosts.extraTime && gameState.round <= 2) {
+        gameState.timer += 5;
+      }
+      
+      if (gameState.activeBoosts.timeFreeze && gameState.round <= 3) {
+        gameState.timer += 5;
+      }
 
       setTimeout(() => startRound(), 500);
     }
@@ -1381,12 +1554,13 @@
     function startTimer() {
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
+        if (isPaused) return;
         gameState.timer--;
         document.getElementById('timer').textContent = gameState.timer;
 
         if (gameState.timer <= 0) {
           clearInterval(timerInterval);
-          loseLife();
+          if (!isPaused) loseLife();
         }
       }, 1000);
     }
@@ -1408,10 +1582,17 @@
       clearInterval(timerInterval);
       clearInterval(fallingInterval);
       
-      if (gameState.activeBoosts.doubleCoins) {
-        gameState.activeBoosts.doubleCoins = false;
-        localStorage.setItem('ownedItems', JSON.stringify(gameState.ownedItems.filter(id => id !== 'doubleCoins')));
+      isPaused = false;
+      
+      if (gameState.activeBoosts.slowMotion > 0) {
+        gameState.itemCounts.slowMotion = (gameState.itemCounts.slowMotion || 0) + gameState.activeBoosts.slowMotion;
+        gameState.activeBoosts.slowMotion = 0;
+        localStorage.setItem('itemCounts', JSON.stringify(gameState.itemCounts));
       }
+      
+      Object.keys(gameState.activeBoosts).forEach(key => {
+        gameState.activeBoosts[key] = key === 'slowMotion' ? 0 : false;
+      });
 
       if (completed) {
         soundEffects.victory();
@@ -1574,7 +1755,6 @@
       }
     }
 
-    // Tela de Descanso
     let screensaverActive = false;
     let screensaverX = 0;
     let screensaverY = 0;
@@ -1622,7 +1802,6 @@
         cancelAnimationFrame(screensaverAnimationId);
       }
       
-      // Limpar trails
       document.querySelectorAll('.screensaver .trail').forEach(trail => trail.remove());
     }
 
@@ -1700,7 +1879,6 @@
       `;
     }
 
-    // Modais
     document.getElementById('btnJogo').addEventListener('click', () => {
       document.getElementById('modalJogo').classList.add('show');
       init();
@@ -1718,13 +1896,13 @@
       document.getElementById('modalJogo').classList.remove('show');
       clearInterval(timerInterval);
       clearInterval(fallingInterval);
+      isPaused = false;
     });
 
     document.getElementById('closePortfolio').addEventListener('click', () => {
       document.getElementById('modalPortfolio').classList.remove('show');
     });
 
-    // Fechar screensaver com qualquer tecla ou clique
     document.getElementById('screensaver').addEventListener('click', stopScreensaver);
     document.addEventListener('keydown', (e) => {
       if (screensaverActive) {
@@ -1732,18 +1910,17 @@
       }
     });
 
-    // Fechar modais ao clicar fora
     document.querySelectorAll('.modal').forEach(modal => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           modal.classList.remove('show');
           clearInterval(timerInterval);
           clearInterval(fallingInterval);
+          isPaused = false;
         }
       });
     });
 
-    // Atalhos de teclado
     document.addEventListener('keydown', (e) => {
       if (document.getElementById('gameScreen').classList.contains('active')) {
         const keys = {
@@ -1758,10 +1935,14 @@
         if (keys[e.key]) {
           dropInBin(keys[e.key]);
         }
+        
+        if (e.code === 'Space') {
+          e.preventDefault();
+          togglePause();
+        }
       }
     });
 
-    // Redimensionar janela
     window.addEventListener('resize', () => {
       if (screensaverActive) {
         if (screensaverX + 50 > window.innerWidth) screensaverX = window.innerWidth - 50;
